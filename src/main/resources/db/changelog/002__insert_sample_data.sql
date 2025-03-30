@@ -30,7 +30,7 @@ INSERT INTO account (name, account_number, account_type_id, account_status_id) V
     ('Startup Business', 'CRED445566', (SELECT id FROM account_type WHERE name = 'CREDIT'), (SELECT id FROM account_status WHERE name = 'PENDING'));
 
 -- Insert account balances (Fixed FK references)
-INSERT INTO account_balance (balance, account_id, currency_id) VALUES
+INSERT INTO account_balance (amount, account_id, currency_id) VALUES
     (1500.75, (SELECT id FROM account WHERE account_number = 'DEB123456'), (SELECT id FROM currency WHERE code = 'EUR')),
     (2500.00, (SELECT id FROM account WHERE account_number = 'CRED654321'), (SELECT id FROM currency WHERE code = 'USD')),
     (350.50, (SELECT id FROM account WHERE account_number = 'INV789101'), (SELECT id FROM currency WHERE code = 'DKK')),

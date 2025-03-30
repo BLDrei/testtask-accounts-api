@@ -1,23 +1,42 @@
 package com.swedbank.accounts.controller;
 
 import com.swedbank.accounts.dto.AccountDto;
+import com.swedbank.accounts.dto.balance_change.BalanceAdjustmentDto;
 import com.swedbank.accounts.service.AccountService;
+import com.swedbank.accounts.service.BalanceAdjustmentService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("accounts")
 @RequiredArgsConstructor
+@Validated
 public class AccountsController {
 
   private final AccountService accountService;
+  private final BalanceAdjustmentService balanceAdjustmentService;
 
   @GetMapping
   public List<AccountDto> getAllAccounts() {
     return accountService.fetchAccounts();
+  }
+
+  @PostMapping("{accountNumber}/credit")
+  @Operation(summary = "Add money to account")
+  public void addMoneyToAccount(@PathVariable String accountNumber,
+                                @RequestBody List<@Valid BalanceAdjustmentDto> balances) {
+    balanceAdjustmentService.addMoneyToAccount(accountNumber, balances);
+  }
+
+  @PostMapping("{accountNumber}/debit")
+  @Operation(summary = "Debit money from account")
+  public void debitMoneyFromAccount(@PathVariable String accountNumber,
+                                    @RequestBody @Valid BalanceAdjustmentDto balance) {
+    balanceAdjustmentService.debitMoneyFromAccount(accountNumber, balance);
   }
 }

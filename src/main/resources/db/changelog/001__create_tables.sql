@@ -73,7 +73,7 @@ CREATE TABLE account(
 CREATE TABLE account_balance(
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
-    balance NUMBER(11,2) NOT NULL CHECK (balance >= 0.00),
+    amount NUMBER(11,2) NOT NULL CHECK (amount >= 0.00),
 
     account_id INTEGER,
     CONSTRAINT fk_account_balance_account_id

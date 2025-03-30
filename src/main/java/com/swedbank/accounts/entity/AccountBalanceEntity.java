@@ -15,22 +15,22 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class AccountBalance {
+public class AccountBalanceEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @Column(nullable = false, precision = 11, scale = 2)
-  private BigDecimal balance;
+  private BigDecimal amount;
 
   @ManyToOne
   @JoinColumn(name = "account_id", nullable = false)
-  private Account account;
+  private AccountEntity account;
 
   @ManyToOne
   @JoinColumn(name = "currency_id", nullable = false)
-  private Currency currency;
+  private CurrencyEntity currency;
 
   private LocalDateTime deletedAt;
 }

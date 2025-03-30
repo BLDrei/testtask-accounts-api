@@ -2,29 +2,29 @@ package com.swedbank.accounts.mapper;
 
 import com.swedbank.accounts.dto.AccountBalanceDto;
 import com.swedbank.accounts.dto.AccountDto;
-import com.swedbank.accounts.entity.Account;
-import com.swedbank.accounts.entity.AccountBalance;
+import com.swedbank.accounts.entity.AccountEntity;
+import com.swedbank.accounts.entity.AccountBalanceEntity;
 
 public class AccountMapper {
 
-  public static AccountDto toDto(Account account) {
+  public static AccountDto toDto(AccountEntity accountEntity) {
     return new AccountDto(
-      account.getName(),
-      account.getAccountNumber(),
-      account.getAccountType().getName(),
-      account.getAccountStatus().getName(),
-      account.getAccountBalances()
+      accountEntity.getName(),
+      accountEntity.getAccountNumber(),
+      accountEntity.getAccountType().getName(),
+      accountEntity.getAccountStatus().getName(),
+      accountEntity.getAccountBalances()
         .stream()
         .map(AccountMapper::toDto)
         .toList()
     );
   }
 
-  public static AccountBalanceDto toDto(AccountBalance accountBalance) {
+  public static AccountBalanceDto toDto(AccountBalanceEntity accountBalanceEntity) {
     return new AccountBalanceDto(
-      accountBalance.getBalance(),
-      accountBalance.getCurrency().getCode(),
-      accountBalance.getCurrency().getSign()
+      accountBalanceEntity.getAmount(),
+      accountBalanceEntity.getCurrency().getCode(),
+      accountBalanceEntity.getCurrency().getSign()
     );
   }
 }
