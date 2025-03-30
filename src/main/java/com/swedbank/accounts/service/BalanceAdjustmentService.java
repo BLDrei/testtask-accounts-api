@@ -1,13 +1,14 @@
 package com.swedbank.accounts.service;
 
 import com.swedbank.accounts.config.AccountConfig;
-import com.swedbank.accounts.dto.AccountStatus;
-import com.swedbank.accounts.dto.Currency;
-import com.swedbank.accounts.dto.balance_change.BalanceAdjustmentDto;
-import com.swedbank.accounts.entity.AccountBalanceEntity;
-import com.swedbank.accounts.entity.AccountStatusEntity;
+import com.swedbank.accounts.dto.EAccountStatus;
+import com.swedbank.accounts.dto.ECurrency;
+import com.swedbank.accounts.dto.balance_adjustment.BalanceAdjustmentDto;
+import com.swedbank.accounts.entity.AccountBalance;
+import com.swedbank.accounts.entity.AccountStatus;
 import com.swedbank.accounts.exception.BusinessException;
 import com.swedbank.accounts.exception.NotFoundException;
+import com.swedbank.accounts.externalapi.HttpStatClient;
 import com.swedbank.accounts.repository.AccountRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,10 @@ import static com.swedbank.accounts.util.CompareUtil.lessThan;
 @RequiredArgsConstructor
 public class BalanceAdjustmentService {
   private final AccountRepository accountRepository;
+  private final HttpStatClient httpStatClient;
 
-  private static final List<String> STATUSES_WITH_ADJUSTABLE_BALANCE = Stream.of(AccountStatus.ACTIVE)
-    .map(AccountStatus::name)
+  private static final List<String> STATUSES_WITH_ADJUSTABLE_BALANCE = Stream.of(EAccountStatus.ACTIVE)
+    .map(EAccountStatus::name)
     .toList();
 
   @Transactional
@@ -42,7 +44,7 @@ public class BalanceAdjustmentService {
     var balances = accountEntity.getAccountBalances();
 
     for (BalanceAdjustmentDto adjustment : adjustments) {
-      AccountBalanceEntity balance = findAccountBalanceByCurrency(balances, adjustment.currency())
+      AccountBalance balance = findAccountBalanceByCurrency(balances, adjustment.currency())
         .orElseThrow(() -> new BusinessException("Account=%s doesn't support currency '%s'".formatted(accountNumber, adjustment.currency())));
 
       BigDecimal newAmount = balance.getAmount().add(adjustment.amount());
@@ -56,6 +58,8 @@ public class BalanceAdjustmentService {
 
   @Transactional
   public void debitMoneyFromAccount(String accountNumber, BalanceAdjustmentDto adjustment) {
+    httpStatClient.get200Response();
+
     var accountEntity = accountRepository.findAccountByAccountNumber(accountNumber)
       .orElseThrow(() -> new NotFoundException("Account with number=%s not found".formatted(accountNumber)));
 
@@ -65,7 +69,7 @@ public class BalanceAdjustmentService {
 
     var balances = accountEntity.getAccountBalances();
 
-    AccountBalanceEntity balance = findAccountBalanceByCurrency(balances, adjustment.currency())
+    AccountBalance balance = findAccountBalanceByCurrency(balances, adjustment.currency())
       .orElseThrow(() -> new BusinessException("Account=%s doesn't support currency '%s'".formatted(accountNumber, adjustment.currency())));
 
     BigDecimal newAmount = balance.getAmount().subtract(adjustment.amount());
@@ -76,13 +80,13 @@ public class BalanceAdjustmentService {
     balance.setAmount(newAmount);
   }
 
-  private static Optional<AccountBalanceEntity> findAccountBalanceByCurrency(List<AccountBalanceEntity> balances, Currency currency) {
+  private static Optional<AccountBalance> findAccountBalanceByCurrency(List<AccountBalance> balances, ECurrency currency) {
     return balances.stream()
       .filter(it -> it.getCurrency().getCode().equals(currency.name()))
       .findAny();
   }
 
-  private static boolean isBalanceAdjustable(AccountStatusEntity statusEntity) {
+  private static boolean isBalanceAdjustable(AccountStatus statusEntity) {
     String status = statusEntity.getName();
     return !status.isBlank() && STATUSES_WITH_ADJUSTABLE_BALANCE.contains(status);
   }

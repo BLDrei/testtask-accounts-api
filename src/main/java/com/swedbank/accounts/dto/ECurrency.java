@@ -1,5 +1,5 @@
 package com.swedbank.accounts.dto;
 
-public enum Currency {
+public enum ECurrency {
   EUR, USD, DKK, GBP, JPY, CHF
 }

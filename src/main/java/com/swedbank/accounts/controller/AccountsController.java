@@ -1,7 +1,7 @@
 package com.swedbank.accounts.controller;
 
 import com.swedbank.accounts.dto.AccountDto;
-import com.swedbank.accounts.dto.balance_change.BalanceAdjustmentDto;
+import com.swedbank.accounts.dto.balance_adjustment.BalanceAdjustmentDto;
 import com.swedbank.accounts.service.AccountService;
 import com.swedbank.accounts.service.BalanceAdjustmentService;
 import io.swagger.v3.oas.annotations.Operation;

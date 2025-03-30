@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class AccountEntity {
+public class Account {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,14 +32,14 @@ public class AccountEntity {
 
   @ManyToOne
   @JoinColumn(name = "account_type_id")
-  private AccountTypeEntity accountType;
+  private AccountType accountType;
 
   @ManyToOne
   @JoinColumn(name = "account_status_id")
-  private AccountStatusEntity accountStatus;
+  private AccountStatus accountStatus;
 
   @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  private List<AccountBalanceEntity> accountBalances;
+  private List<AccountBalance> accountBalances;
 
   private LocalDateTime deletedAt;
 }

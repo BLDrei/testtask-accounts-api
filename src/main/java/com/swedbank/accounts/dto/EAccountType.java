@@ -1,5 +1,5 @@
 package com.swedbank.accounts.dto;
 
-public enum AccountType {
+public enum EAccountType {
   DEBIT, CREDIT, INVEST
 }

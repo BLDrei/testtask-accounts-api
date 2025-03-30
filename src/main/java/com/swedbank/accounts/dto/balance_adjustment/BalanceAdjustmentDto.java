@@ -1,6 +1,6 @@
-package com.swedbank.accounts.dto.balance_change;
+package com.swedbank.accounts.dto.balance_adjustment;
 
-import com.swedbank.accounts.dto.Currency;
+import com.swedbank.accounts.dto.ECurrency;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -13,5 +13,5 @@ public record BalanceAdjustmentDto(
   BigDecimal amount,
 
   @NotNull
-  Currency currency
+  ECurrency currency
 ) {}

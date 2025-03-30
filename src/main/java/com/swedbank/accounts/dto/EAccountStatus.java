@@ -1,5 +1,5 @@
 package com.swedbank.accounts.dto;
 
-public enum AccountStatus {
+public enum EAccountStatus {
   ACTIVE, CLOSED, BLOCKED, FROZEN, PENDING
 }
