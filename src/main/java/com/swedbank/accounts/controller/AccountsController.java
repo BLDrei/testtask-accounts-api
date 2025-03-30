@@ -6,6 +6,7 @@ import com.swedbank.accounts.service.AccountService;
 import com.swedbank.accounts.service.BalanceAdjustmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class AccountsController {
   @PatchMapping("{accountNumber}/credit")
   @Operation(summary = "Add money to account")
   public void addMoneyToAccount(@PathVariable String accountNumber,
-                                @RequestBody List<@Valid BalanceAdjustmentDto> balances) {
+                                @RequestBody @NotEmpty List<@Valid BalanceAdjustmentDto> balances) {
     balanceAdjustmentService.addMoneyToAccount(accountNumber, balances);
   }
 
