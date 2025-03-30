@@ -26,14 +26,19 @@ public class AccountsController {
     return accountService.fetchAccounts();
   }
 
-  @PostMapping("{accountNumber}/credit")
+  @GetMapping("{accountNumber}")
+  public AccountDto getAllAccounts(@PathVariable String accountNumber) {
+    return accountService.fetchAccountByAccountNumber(accountNumber);
+  }
+
+  @PatchMapping("{accountNumber}/credit")
   @Operation(summary = "Add money to account")
   public void addMoneyToAccount(@PathVariable String accountNumber,
                                 @RequestBody List<@Valid BalanceAdjustmentDto> balances) {
     balanceAdjustmentService.addMoneyToAccount(accountNumber, balances);
   }
 
-  @PostMapping("{accountNumber}/debit")
+  @PatchMapping("{accountNumber}/debit")
   @Operation(summary = "Debit money from account")
   public void debitMoneyFromAccount(@PathVariable String accountNumber,
                                     @RequestBody @Valid BalanceAdjustmentDto balance) {

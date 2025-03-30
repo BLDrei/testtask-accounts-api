@@ -15,8 +15,14 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Long> {
     JOIN FETCH a.accountBalances ab
     WHERE a.deletedAt IS NULL AND ab.deletedAt IS NULL
     """)
-  List<AccountEntity> findAllNotDeletedAccounts();
+  List<AccountEntity> findAllAccounts();
 
+  @Query("""
+    SELECT a FROM Account a
+    JOIN FETCH a.accountBalances ab
+    WHERE a.deletedAt IS NULL AND ab.deletedAt IS NULL
+    AND a.accountNumber = :accountNumber
+    """)
   Optional<AccountEntity> findAccountByAccountNumber(String accountNumber);
 
 }
